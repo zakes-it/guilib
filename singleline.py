@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 from nibbler import *
 import argparse
 import os
@@ -52,6 +50,6 @@ if __name__ == '__main__':
 		nib = os.path.join(PATH, 'nibs', 'SingleLine.nib')
 		n = Nibbler(nib)
 	except IOError:
-		print "Unable to load nib!"
+		print("Unable to load nib!")
 		exit(20)
 	main()

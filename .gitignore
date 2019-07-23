@@ -10,4 +10,9 @@ Icon
 ._*
 
 # Python
-.pyc
+*.pyc
+Pipfile
+Pipfile.lock
+
+# IDE
+.vscode

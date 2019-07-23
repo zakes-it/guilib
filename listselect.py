@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 from nibbler import *
 import argparse
 import os
@@ -37,7 +35,7 @@ def main():
 	'to stdout on submission'))
 	parser.add_argument('--title', help='Window title')
 	parser.add_argument('--prompt', help='Window informative text')
-	parser.add_argument('--list', help='JSON formatted list')
+	parser.add_argument('--list', help='JSON formatted list',required=True)
 	parser.add_argument('--button', help='Submission button title')
 	args = parser.parse_args()
 	init_window()
@@ -51,6 +49,6 @@ if __name__ == '__main__':
 		nib = os.path.join(PATH, 'nibs', 'ListSelect.nib')
 		n = Nibbler(nib)
 	except IOError:
-		print "Unable to load nib!"
+		print("Unable to load nib!")
 		exit(20)
 	main()

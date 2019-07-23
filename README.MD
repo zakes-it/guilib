@@ -16,6 +16,14 @@ cd guilib
 /usr/bin/python notify.py --title 'Test Dialog' --prompt 'Hello World!' --button 'OK'
 ```
 
+## Python 3
+You'll need pyobjc to use GUIlib with python 3. You can set up a virtual environment to test things out with pipenv:
+```
+cd guilib
+pipenv install pyobjc --python 3
+pipenv run python notify.py
+```
+
 ## Using the module
 In addition to running guilib scripts from the command line, it can be imported for use in your python projects.
 1. Copy the module to your project directory.
