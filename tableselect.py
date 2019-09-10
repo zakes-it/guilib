@@ -41,7 +41,13 @@ class MyTableDelegate(NSObject):
 		
 	def tableView_heightOfRow_(self, view, row):
 		row_contents = myController.arrangedObjects()[row].values()
-		max_lines = max([len(str(x).splitlines()) for x in row_contents])
+		linecnt = list()
+		for x in row_contents:
+			if type(x) in (str, unicode):
+				linecnt.append(len(x.splitlines()))
+			else:
+				linecnt.append(1)
+		max_lines = max(linecnt)
 		line_height = 16
 		return line_height * max_lines
 
