@@ -4,7 +4,6 @@ import os
 import sys
 from AppKit import NSTimer
 
-PATH =  os.path.abspath(os.path.dirname(__file__))
 
 class genericWindowController(NSObject):
 	"""This class represents the window controller."""
@@ -18,11 +17,24 @@ class genericWindowController(NSObject):
 		"""Respond to the automatic timer."""
 		n.quit()
 
+
+def get_args():
+	parser = argparse.ArgumentParser(description=('Displays an informative '
+		'window with circular progress indicator which closes after the '
+		'specified time or is manually killed'))
+	parser.add_argument('--title', help='Window title')
+	parser.add_argument('--prompt', help='Window informative text')
+	parser.add_argument('--timeout', help='Time in seconds to show window')
+	args = parser.parse_args()
+	return args
+
+
 def init_window():
 	n.win.becomeMainWindow()
 	n.win.center()
 	n.win.setCanBecomeVisibleWithoutLogin_(True)
 	n.win.orderFrontRegardless()
+
 
 def set_window(args):
 	if args.title:
@@ -42,19 +54,16 @@ def set_window(args):
 	n.views['spinner'].setUsesThreadedAnimation_(True)
 	n.views['spinner'].startAnimation_(None)
 
+
 def main():
-	parser = argparse.ArgumentParser(description=('Displays an informative '
-		'window with circular progress indicator which closes after the '
-		'specified time or is manually killed'))
-	parser.add_argument('--title', help='Window title')
-	parser.add_argument('--prompt', help='Window informative text')
-	parser.add_argument('--timeout', help='Time in seconds to show window')
-	args = parser.parse_args()
+	args = get_args()
 	init_window()
 	set_window(args)
 	n.run()
 
+
 if __name__ == '__main__':
+	PATH =  os.path.abspath(os.path.dirname(__file__))
 	try:
 		# Because of how this loads, this should be an absolute path if you don't
 		# want to run this from the same directory as the script

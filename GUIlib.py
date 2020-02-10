@@ -7,6 +7,15 @@ import json
 import warnings
 from threading import Timer
 
+
+class GUITimeout(Exception):
+	pass
+
+
+class GUIProccessError(Exception):
+	pass
+
+
 class GUIPrompt(object):
 	def __init__(self, title, button='OK', timeout=None):
 		self.path = os.path.abspath(os.path.dirname(__file__))
@@ -14,10 +23,20 @@ class GUIPrompt(object):
 		self.button = button
 		self.timeout = timeout
 		self._pid = None
+		self._timer_ended = False
 	
 	def script(self, fname):
 		'''return full path to fname python script'''
 		return os.path.join(self.path, fname)
+
+	def _end_timer(self):
+		self._timer_ended = True
+		self.kill()
+	
+	def _kill_on_timeout(self):
+		self._timer_ended = False
+		err = 'Prompt timeout expired after {} seconds'.format(self.timeout)
+		raise GUITimeout(err)
 
 	def kill(self):
 		try:
@@ -25,7 +44,8 @@ class GUIPrompt(object):
 		except:
 			warnings.warn('No killable process found')
 		self._pid = None
-	
+		self._timedout = False
+
 	def run(self, args, data=None):
 		'''run args in a subprocess, sending data through stdin on an optional
 		timer'''
@@ -34,19 +54,24 @@ class GUIPrompt(object):
 			stdin=subprocess.PIPE, 
 			stdout=subprocess.PIPE, 
 			stderr=subprocess.PIPE)
-		# setup timer to close window if there has been no input
-		timer = Timer(self.timeout, self._pid.kill)
+		timer = Timer(self.timeout, self._end_timer)
+		timer.start()
 		try:
-			timer.start()
 			stdout, stderr = self._pid.communicate(data)
 			if stderr:
 				print(stderr)
+			if self._pid and self._pid.returncode != 0:
+				err = 'Prompt terminated unexpectedly with exit code {}'.format(
+					self._pid.returncode)
+				raise GUIProccessError(err)
 			return stdout
 		finally:
 			timer.cancel()
-			# kill the child window process if the parent script has crashed or
-			# been terminated (ie. CTRL-C)
-			self.kill()
+			if self._timer_ended:
+				self._kill_on_timeout()
+			else:
+				self.kill()
+			
 
 	def notify(self, prompt, button=None):
 		button = button if button else self.button
@@ -66,7 +91,10 @@ class GUIPrompt(object):
 		if self.timeout:
 			args.append('--timeout')
 			args.append(str(self.timeout))
-			_ = self.run(args)
+			try:
+				_ = self.run(args)
+			except GUITimeout:
+				pass
 		else:
 			self._pid = subprocess.Popen(args)
 
@@ -159,5 +187,7 @@ class GUIPrompt(object):
 		if multiple:
 			args.append('--multiple')
 		data = json.dumps(table)
+		if sys.version_info > (3, 0):
+			data = data.encode()
 		result = self.run(args, data)
 		return json.loads(result)

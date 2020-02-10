@@ -36,11 +36,11 @@ native python data types.
 1. Copy the module to your project directory.
 2. Import the module in your script
 ```
-import GUIlib
+import guilib
 ```
 3. Create an instance of the GUIPrompt class:
 ```
-prompter = GUIPrompt(title="Example Prompt", button="OK", timeout=None)
+prompter = guilib.GUIPrompt(title="Example Prompt", button="OK", timeout=None)
 ```
 - title: Sets the window title for all dialogs. Required
 - button: Sets the submission button text for all dialogs with a single button (notify, line, multiline, credentials, 
