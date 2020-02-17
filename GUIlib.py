@@ -56,12 +56,12 @@ class GUIPrompt(object):
         try:
             stdout, stderr = self._pid.communicate(data)
             if stderr:
-                print(stderr)
+                warnings.warn(stderr)
             if self._pid and self._pid.returncode != 0:
                 err = 'Prompt terminated unexpectedly with exit code {}'.format(
                     self._pid.returncode)
                 raise GUIProccessError(err)
-            return stdout
+            return stdout.decode()
         finally:
             timer.cancel()
             if self._timer_ended:
@@ -143,7 +143,7 @@ class GUIPrompt(object):
                 '--prompt', prompt]
         args.extend(['--title', kwargs.get('title', self.title)])
         args.extend(['--button', kwargs.get('button', self.button)])
-        return json.loads(self.run(args))
+        return json.loads(self.run(timeout, args))
 
     def list_select(self, prompt, list, **kwargs):
         timeout = kwargs.get('timeout', self.timeout)
@@ -152,7 +152,7 @@ class GUIPrompt(object):
                 '--list', json.dumps(list)]
         args.extend(['--title', kwargs.get('title', self.title)])
         args.extend(['--button', kwargs.get('button', self.button)])
-        return self.run(args)
+        return self.run(timeout, args)
 
     def table_select(self, prompt, table, multiple=False, **kwargs):
         timeout = kwargs.get('timeout', self.timeout)
@@ -162,7 +162,5 @@ class GUIPrompt(object):
         args.extend(['--button', kwargs.get('button', self.button)])
         if multiple:
             args.append('--multiple')
-        data = json.dumps(table)
-        if sys.version_info > (3, 0):
-            data = data.encode()
+        data = json.dumps(table).encode()
         return json.loads(self.run(timeout, args, data))
