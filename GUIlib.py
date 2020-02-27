@@ -145,11 +145,11 @@ class GUIPrompt(object):
         args.extend(['--button', kwargs.get('button', self.button)])
         return json.loads(self.run(timeout, args))
 
-    def list_select(self, prompt, list, **kwargs):
+    def list_select(self, prompt, choices, **kwargs):
         timeout = kwargs.get('timeout', self.timeout)
         args = [sys.executable, self.script('listselect.py'),
                 '--prompt', prompt,
-                '--list', json.dumps(list)]
+                '--choices', json.dumps(choices)]
         args.extend(['--title', kwargs.get('title', self.title)])
         args.extend(['--button', kwargs.get('button', self.button)])
         return self.run(timeout, args)

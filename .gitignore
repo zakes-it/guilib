@@ -13,6 +13,7 @@ Icon
 *.pyc
 Pipfile
 Pipfile.lock
+__pycache__
 
 # IDE
 .vscode

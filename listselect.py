@@ -11,7 +11,7 @@ def get_args():
 		'string to stdout on submission'))
 	parser.add_argument('--title', help='Window title')
 	parser.add_argument('--prompt', help='Window informative text')
-	parser.add_argument('--list', help='JSON formatted list',required=True)
+	parser.add_argument('--choices', help='JSON formatted list',required=True)
 	parser.add_argument('--button', help='Submission button title')
 	args = parser.parse_args()
 	return args
@@ -42,7 +42,7 @@ def set_window(args):
 	if args.prompt:
 		n.views['label'].setString_(args.prompt)
 	n.views['list'].removeAllItems()
-	n.views['list'].addItemsWithTitles_(json.loads(args.list))
+	n.views['list'].addItemsWithTitles_(json.loads(args.choices))
 	if args.button:
 		n.views['button'].setTitle_(args.button)
 

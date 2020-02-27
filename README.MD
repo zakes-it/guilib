@@ -147,7 +147,7 @@ you wish to allow the selection of multiple items, use the 'table_select()' meth
 choices = ('macOS', 'Windows', 'Linux', 'Other')
 best_os = prompter.list_select(
     prompt='Which operating system is best?',
-    list=choices)
+    choices=choices)
 print('{} is the best operating system'.format(best_os))
 ```
 #### table_select()
