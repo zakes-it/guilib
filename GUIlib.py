@@ -130,7 +130,7 @@ class GUIPrompt(object):
 
     def multiline(self, prompt, **kwargs):
         timeout = kwargs.get('timeout', self.timeout)
-        args = [sys.executable, self.script('multeline.py'),
+        args = [sys.executable, self.script('multiline.py'),
                 '--prompt', prompt]
         args.extend(['--title', kwargs.get('title', self.title)])
         args.extend(['--button', kwargs.get('button', self.button)])
