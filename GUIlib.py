@@ -128,6 +128,16 @@ class GUIPrompt(object):
         args.extend('--save')
         return self.run(timeout, args)
 
+    def date(self, prompt, **kwargs):
+        timeout = kwargs.get('timeout', self.timeout)
+        args = [sys.executable, self.script('date.py'),
+                '--prompt', prompt]
+        args.extend(['--title', kwargs.get('title', self.title)])
+        args.extend(['--button', kwargs.get('button', self.button)])
+        args.extend(['--default', kwargs.get('default', '')])
+        return self.run(timeout, args)
+
+
     def multiline(self, prompt, **kwargs):
         timeout = kwargs.get('timeout', self.timeout)
         args = [sys.executable, self.script('multiline.py'),
